@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "696918076794",
+    "firebase_url": "https://fir-buf-app.firebaseio.com",
+    "project_id": "fir-buf-app",
+    "storage_bucket": "fir-buf-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:696918076794:android:3e826df9df7992bbddfac3",
+        "android_client_info": {
+          "package_name": "com.example.pruebadescarga"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "696918076794-1te0h14mjd0h0ndn9ktno8tqv7hg2tle.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.pruebadescarga",
+            "certificate_hash": "6230b1dcfa48b305046e1b121909c453d3debc4a"
+          }
+        },
+        {
+          "client_id": "696918076794-5e00vgvh1bi0q090p80kgmgnl1ci1f0a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCoYdHtjd8fR1yOk6FdYVl00IQJf6deHjI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "696918076794-5e00vgvh1bi0q090p80kgmgnl1ci1f0a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
