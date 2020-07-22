@@ -6,6 +6,8 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.example.pruebadescarga.interfaces.IServiceUpload;
+import com.example.pruebadescarga.model.ResponseServicioUpload;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -27,7 +29,19 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Random;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -78,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     currentImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri);
                     selectedImage.setImageBitmap(currentImage);
-                    final Context context = this.getApplicationContext();
+                    final Context context = this.getBaseContext();
                     final Runnable r = new Runnable() {
                         @Override
                         public void run() {
@@ -96,17 +110,77 @@ public class MainActivity extends AppCompatActivity {
                                 @Override
                                 public void onFailure(@NonNull Exception exception) {
 
-                                    Toast.makeText(context,"Error al subir el archivo",Toast.LENGTH_LONG);
+                                    Toast.makeText(context,"Error al subir el archivo",Toast.LENGTH_LONG).show();
                                 }
                             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                 @Override
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                    Toast.makeText(context,"Success al subir el archivo",Toast.LENGTH_LONG);
+                                    Toast.makeText(context,"Success al subir el archivo",Toast.LENGTH_LONG).show();
                                 }
                             });
                         }
                     };
+
+                    final Runnable s =  new Runnable(){
+                        @Override
+                        public void run() {
+                            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            currentImage.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                            byte[] data = baos.toByteArray();
+                            Random rand = new Random(); //instance of random class
+                            int upperbound = 25;
+                            //generate random values from 0-24
+                            int int_random = rand.nextInt(upperbound);
+                            String a =String.valueOf(int_random);
+                            Retrofit retrofit = new Retrofit.Builder()
+                                    .baseUrl("http://192.168.0.107/")
+                                    .addConverterFactory(GsonConverterFactory.create())
+                                    .build();
+                            IServiceUpload service = retrofit.create(IServiceUpload.class);
+                            File fi = null;
+                            try {
+                                fi = File.createTempFile("tmp"+a,".jpeg",null);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            FileOutputStream fos = null;
+                            try {
+                                fos = new FileOutputStream(fi);
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                fos.write(data);
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            RequestBody requestFile =
+                                    RequestBody.create(MediaType.parse("image/jpeg"),fi);
+                            MultipartBody.Part part = MultipartBody.Part.createFormData("img", "tmp"+a+".jpeg",requestFile);
+                            Call<ResponseServicioUpload> call = service.uploadFile(part);
+                            call.enqueue(new Callback<ResponseServicioUpload>() {
+                                @Override
+                                public void onResponse(Call<ResponseServicioUpload> call, retrofit2.Response<ResponseServicioUpload> response) {
+                                    ResponseServicioUpload resp = response.body();
+                                    Toast.makeText(context,resp.getMensaje(),Toast.LENGTH_LONG).show();
+                                }
+
+                                @Override
+                                public void onFailure(Call<ResponseServicioUpload> call, Throwable t) {
+                                    Toast.makeText(context,"Error al subir el archivo php service",Toast.LENGTH_LONG).show();
+                                }
+                            });
+                            try {
+                                fos.close();
+                                fi.deleteOnExit();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    };
                     new Thread(r).start();
+                    new Thread(s).start();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
