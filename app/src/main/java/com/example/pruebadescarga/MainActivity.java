@@ -48,14 +48,16 @@ public class MainActivity extends AppCompatActivity {
     private ImageView selectedImage;
     private Bitmap currentImage;
     private StorageReference mStorageRef;
+    private Button sig;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        sig = findViewById(R.id.btnMainSig);
         mStorageRef = FirebaseStorage.getInstance().getReference();
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -78,6 +80,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+        sig.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), VideoActivity.class);
+                v.getContext().startActivity(intent);
+            }
+        });
 
     }
 
@@ -133,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
                             int int_random = rand.nextInt(upperbound);
                             String a =String.valueOf(int_random);
                             Retrofit retrofit = new Retrofit.Builder()
-                                    .baseUrl("http://192.168.0.107/")
+                                    .baseUrl("http://192.168.8.233:81")
                                     .addConverterFactory(GsonConverterFactory.create())
                                     .build();
                             IServiceUpload service = retrofit.create(IServiceUpload.class);

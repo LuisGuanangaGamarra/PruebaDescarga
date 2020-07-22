@@ -25,12 +25,28 @@
 
     <Button
         android:id="@+id/takeFoto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="141dp"
+        android:layout_height="48dp"
         android:layout_marginTop="192dp"
+        android:background="#17536B"
+        android:lineSpacingExtra="8sp"
         android:text="Abrir Galeria"
+        android:textColor="#F4F2F2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.537"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/foto" />
+
+    <Button
+        android:id="@+id/btnMainSig"
+        android:layout_width="142dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="36dp"
+        android:background="#17536B"
+        android:text="Siguiente"
+        android:textColor="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.542"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/takeFoto" />
 </androidx.constraintlayout.widget.ConstraintLayout>
